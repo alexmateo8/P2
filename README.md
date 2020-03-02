@@ -99,13 +99,20 @@ Ejercicios
   continuación, una captura de `wavesurfer` en la que se vea con claridad la señal temporal, el contorno de
   potencia y la tasa de cruces por cero, junto con el etiquetado manual de los segmentos.
 
+<img src="img/signal.png" width="640" align="center">
 
 - A la vista de la gráfica, indique qué valores considera adecuados para las magnitudes siguientes:
 
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para estar
       seguros de que un segmento de señal se corresponde con voz.
+	
+`**A partir de la gráfica podemos observar que el nivel correspondiente al silencio inicial es de aproximadamente de 45 dB. El nivel de potencia al hablar es de aproximadamente de 60dB por lo que sufre un incremento de potencia de 15dB. **`
 
 	* Duración mínima razonable de los segmentos de voz y silencio.
+`** La señal de voz consta de 3 silencios de aproximadamente 300ms y 3 series de palabras de aproximadamente 1s.  **`
+
+`**En la siguiente imagen se puede observar la representación del etiquetado utilizando el programa cat. Se puede observar la duración de los intervalos de cada segmento.  **`
+<img src="img/cat_SV.png" width="640" align="center">
 
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
 
