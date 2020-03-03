@@ -122,6 +122,16 @@ Ejercicios
 
 ### Desarrollo del detector de actividad vocal
 
+**`Antes de empezar con el desarrollo del detector de actividad vocal hemos hecho las tareas del pdf:`**
+
+**`En las siguientes dos imágenes podemos observar dos paneles de transcripción, uno con la segmentación manual y otro con la segmentación generada por el programa vad.`**
+
+<img src="img/TranscriptionP2_1.png" width="640" align="center">
+<img src="img/TranscriptionP2_2.png" width="640" align="center">
+
+**`Vemos que no funciona correctamente, ya que asigna el etiquetado aleatorio. Esto nos llevará al correcto desarrollo de la práctica, que veremos a continuación.`**
+
+
 - Complete el código de los ficheros de la práctica para implementar un detector de actividad vocal tan
   exacto como sea posible. Tome como objetivo la maximización de la puntuación-F `TOTAL`.
 
