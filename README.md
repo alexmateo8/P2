@@ -102,6 +102,8 @@ Ejercicios
 
 <img src="img/signal.png" width="640" align="center">
 
+**`Aquí podemos ver como hemos segmentado en silencio (S) y voz (V) la parte del audio.`**
+
 - A la vista de la gráfica, indique qué valores considera adecuados para las magnitudes siguientes:
 
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para estar
