@@ -1,0 +1,4 @@
+# ninja log v5
+1	46	1583250257	vad@exe/src_vad.c.o	c36367caf77eaccb
+0	86	1583254991	vad@exe/src_main_vad.c.o	d098179ec8175ebe
+86	111	1583254991	vad	c312e30cac90a429
