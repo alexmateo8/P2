@@ -118,6 +118,7 @@ Ejercicios
 <img src="img/cat_SV.png" width="640" align="center">
 
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
+**`Comparando la waveform con la tasa de cruces por cero podemos observar que dependiendo del tipo de fonema la tasa cambia. En nuestro caso la señal viene por la frase: "David Serrano Francesc Net". Podemos observar como la gráfica de cruces por cero tiene tres picos y esto es debido a la S de Serrano la primera c y s de Francesc, ya que son fricativas sordas. Dicho fonema (las fricativas sordas) son mas erraticas que el resto.`**
 
 
 ### Desarrollo del detector de actividad vocal
