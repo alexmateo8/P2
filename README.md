@@ -100,7 +100,7 @@ Ejercicios
   continuación, una captura de `wavesurfer` en la que se vea con claridad la señal temporal, el contorno de
   potencia y la tasa de cruces por cero, junto con el etiquetado manual de los segmentos.
 
-<img src="img/waveform.png" width="640" align="center">
+<img src="img/waveform1.png" width="640" align="center">
 
 **`Aquí podemos ver como hemos segmentado en silencio (S) y voz (V) la parte del audio.`**
 
