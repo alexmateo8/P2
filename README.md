@@ -100,25 +100,37 @@ Ejercicios
   continuación, una captura de `wavesurfer` en la que se vea con claridad la señal temporal, el contorno de
   potencia y la tasa de cruces por cero, junto con el etiquetado manual de los segmentos.
 
-<img src="img/signal.png" width="640" align="center">
+<img src="img/waveform1.png" width="640" align="center">
+
+**`Aquí podemos ver como hemos segmentado en silencio (S) y voz (V) la parte del audio.`**
 
 - A la vista de la gráfica, indique qué valores considera adecuados para las magnitudes siguientes:
 
 	* Incremento del nivel potencia en dB, respecto al nivel correspondiente al silencio inicial, para estar
       seguros de que un segmento de señal se corresponde con voz.
 	
-`**A partir de la gráfica podemos observar que el nivel correspondiente al silencio inicial es de aproximadamente de 45 dB. El nivel de potencia al hablar es de aproximadamente de 60dB por lo que sufre un incremento de potencia de 15dB. **`
+**`A partir de la gráfica podemos observar que el nivel correspondiente al silencio inicial es de aproximadamente de 45 dB. El nivel de potencia al hablar es de aproximadamente de 60dB por lo que sufre un incremento de potencia de 15dB.`**
 
 	* Duración mínima razonable de los segmentos de voz y silencio.
-`** La señal de voz consta de 3 silencios de aproximadamente 300ms y 3 series de palabras de aproximadamente 1s.  **`
+**`La señal de voz consta de 3 silencios de aproximadamente 300ms y 3 series de palabras de aproximadamente 1s.`**
 
-`**En la siguiente imagen se puede observar la representación del etiquetado utilizando el programa cat. Se puede observar la duración de los intervalos de cada segmento.  **`
+**`En la siguiente imagen se puede observar la representación del etiquetado utilizando el programa cat. Se puede observar la duración de los intervalos de cada segmento.`**
 <img src="img/cat_SV.png" width="640" align="center">
 
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
 
 
 ### Desarrollo del detector de actividad vocal
+
+**`Antes de empezar con el desarrollo del detector de actividad vocal hemos hecho las tareas del pdf:`**
+
+**`En las siguientes dos imágenes podemos observar dos paneles de transcripción, uno con la segmentación manual y otro con la segmentación generada por el programa vad.`**
+
+<img src="img/TranscriptionP2_1.png" width="640" align="center">
+<img src="img/TranscriptionP2_2.png" width="640" align="center">
+
+**`Vemos que no funciona correctamente, ya que asigna el etiquetado aleatorio. Esto nos llevará al correcto desarrollo de la práctica, que veremos a continuación.`**
+
 
 - Complete el código de los ficheros de la práctica para implementar un detector de actividad vocal tan
   exacto como sea posible. Tome como objetivo la maximización de la puntuación-F `TOTAL`.
@@ -147,6 +159,9 @@ Ejercicios
 - Si ha usado `docopt_c` para realizar la gestión de las opciones y argumentos del programa `vad`, inserte
   una captura de pantalla en la que se vea el mensaje de ayuda del programa.
 
+<img src="img/vad.png" width="640" align="center">
+
+**`Este es el mensaje que nos sale al ejecutar el programa. Si escribimos un help, nos explica los comandos posibles.`**
 
 ### Contribuciones adicionales y/o comentarios acerca de la práctica
 
