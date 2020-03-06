@@ -4,9 +4,10 @@
 # Use the nautilus explorer or chmod +x run_vad.sh
 
 
-DB=/home/albino/PAV/Prácticas/enunciados/obsoletos/P2/db.test
-CMD=bin/vad  #write here the name and path of your program
-
+DB=/Users/Francesc/Documents/CesC_47/TELECOS/3B/PAV/LAB/P2/db.v4
+#/home/albino/PAV/Prácticas/enunciados/obsoletos/P2/db.test
+CMD=/Users/Francesc/Documents/CesC_47/TELECOS/3B/PAV/LAB/P2/bin/vad  #write here the name and path of your program
+#bin/vad
 for filewav in $DB/*/*wav; do
 #    echo
     echo "**************** $filewav ****************"
@@ -25,6 +26,6 @@ for filewav in $DB/*/*wav; do
 
 done
 
-vad_evaluation.pl $DB/*/*lab
+vad_evaluation.pl /Users/Francesc/Documents/CesC_47/TELECOS/3B/PAV/LAB/P2/scripts/*/*lab
 
 exit 0
