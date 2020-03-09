@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "vad.h"
+#include "pav_analysis.h"
 
 const float FRAME_TIME = 10.0F; /* in ms. */
 
@@ -23,8 +24,8 @@ const char *state2str(VAD_STATE st) {
 /* Define a datatype with interesting features */
 typedef struct {
   float zcr;
-  float p;
-  float am;
+  float power;
+  float amplitude;
 } Features;
 
 /* 
@@ -36,13 +37,12 @@ Features compute_features(const float *x, int N) {
    * Input: x[i] : i=0 .... N-1 
    * Ouput: computed features
    */
-  /* 
-   * DELETE and include a call to your own functions
-   *
-   * For the moment, compute random value between 0 and 1 
-   */
+
   Features feat;
-  feat.zcr = feat.p = feat.am = (float) rand()/RAND_MAX;
+  feat.zcr = compute_zcr(x, N, 16000); 
+  feat.power = compute_power(x, N);
+  feat.amplitude = compute_am(x, N);
+
   return feat;
 }
 
@@ -85,7 +85,9 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
    */
 
   Features f = compute_features(x, vad_data->frame_length);
-  vad_data->last_feature = f.p; /* save feature, in case you want to show */
+  vad_data->last_feature = f.power; /* save feature, in case you want to show */
+  
+  printf("pow: %f\t\tzcr: %f\tamplitude: %f\t state:%d\n", f.power, f.zcr, f.amplitude, vad_data->state);
 
   switch (vad_data->state) {
   case ST_INIT:
@@ -93,26 +95,48 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
     break;
 
   case ST_SILENCE:
-    if (f.p > 0.95)
-      vad_data->state = ST_VOICE;
+    if (f.power > -35  && f.amplitude > 0.02 )
+      vad_data->state = ST_VOICE;       
     break;
 
   case ST_VOICE:
-    if (f.p < 0.01)
+    if (f.power < -50  && f.amplitude < 0.01 && f.zcr > 4000 )
       vad_data->state = ST_SILENCE;
     break;
 
   case ST_UNDEF:
     break;
+  
   }
 
-  if (vad_data->state == ST_SILENCE ||
-      vad_data->state == ST_VOICE)
+  if (vad_data->state == ST_SILENCE || vad_data->state == ST_VOICE)
     return vad_data->state;
   else
     return ST_UNDEF;
+
 }
 
 void vad_show_state(const VAD_DATA *vad_data, FILE *out) {
   fprintf(out, "%d\t%f\n", vad_data->state, vad_data->last_feature);
 }
+
+
+/*
+Hipotesis sobre fitxer creat de audio mac, a fm=16kHz:
+WE CONSIDER NOISE (silence) IF
+-> zcr > 4000 
+-> power < -50
+-> amplitude < 0.01
+
+WE CONSIDER VOWEL
+-> zcr < 1200
+-> power > -35
+-> amplitude > 0.02
+
+WE CONSIDER CONSONANT Ex: /s/
+-> zcr > 4000
+-> power > -35
+-> amplitude > 0.02
+
+
+*/

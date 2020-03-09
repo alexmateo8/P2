@@ -6,15 +6,17 @@
 #include "vad.h"
 #include "vad_docopt.h"
 
+
 #define DEBUG_VAD 0x1
 
 int main(int argc, char *argv[]) {
-  int verbose = 0; /* To show internal state of vad: verbose = DEBUG_VAD; */
+  int verbose = 1; /* To show internal state of vad: verbose = DEBUG_VAD; Mete un 1 y muestra estados y potencia, mete un 0 y no se ve nada*/ 
 
   SNDFILE *sndfile_in, *sndfile_out = 0;  //SND FICHERO DE AUDIO
   SF_INFO sf_info;                        //SF_INFO display information about audio files
   FILE *vadfile;
   int n_read = 0, i;
+
 
   VAD_DATA *vad_data;                     //struct
   VAD_STATE state, last_state;
@@ -63,7 +65,7 @@ int main(int argc, char *argv[]) {
       return -1;
     }
   }
-
+  
   vad_data = vad_open(sf_info.samplerate);
   /* Allocate memory for buffers */
   frame_size   = vad_frame_size(vad_data);
@@ -83,11 +85,12 @@ int main(int argc, char *argv[]) {
     }
 
     state = vad(vad_data, buffer);
+
     if (verbose & DEBUG_VAD) vad_show_state(vad_data, stdout);
 
     /* TODO: print only SILENCE and VOICE labels */
     /* As it is, it prints UNDEF segments but is should be merge to the proper value */
-    if (state != last_state) {
+    if (state != last_state) { 
       if (t != last_t)
         fprintf(vadfile, "%.5f\t%.5f\t%s\n", last_t * frame_duration, t * frame_duration, state2str(last_state));
       last_state = state;
