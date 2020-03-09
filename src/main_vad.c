@@ -5,6 +5,8 @@
 
 #include "vad.h"
 #include "vad_docopt.h"
+#include "pav_analysis.h"
+
 
 #define DEBUG_VAD 0x1
 
@@ -86,9 +88,10 @@ int main(int argc, char *argv[]) {
 
     /* TODO: print only SILENCE and VOICE labels */
     /* As it is, it prints UNDEF segments but is should be merge to the proper value */
-    if (state != last_state) {
-      if (t != last_t)
+    if (state != last_state && state != ST_UNDEF) {
+      if ((t != last_t)){ //t aumenta mientras last_t no lo hace. Lo utilizamos para saber las tramas anteriores.
         fprintf(vadfile, "%.5f\t%.5f\t%s\n", last_t * frame_duration, t * frame_duration, state2str(last_state));
+      }
       last_state = state;
       last_t = t;
     }
