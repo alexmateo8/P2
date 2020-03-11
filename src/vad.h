@@ -18,6 +18,8 @@ typedef struct {
   unsigned int frame_length;
   float last_feature; /* for debuggin purposes */
   float ko;
+  float low_zero_crossing; //para vocales y consonantes menos fricativas 
+  float high_zero_crossing; //para fricativas
   int frame;
   int last_change;
 } VAD_DATA;

@@ -6,7 +6,11 @@
 
 const float FRAME_TIME = 10.0F; /* in ms. */
 const int UNDECIDED_FRAMES = 5;
-//float ko = 0;
+const int N_INIT = 3;
+const float LLINDAR = 10; //llindar del power
+const float LOW_ZERO_CROSSING = 2;
+const float HIGH_ZERO_CROSSING = 1.5;
+
 
 
 /* 
@@ -28,6 +32,7 @@ typedef struct {
   float zcr;
   float p;
   float am;
+  float sampling_rate;
 } Features;
 
 /* 
@@ -39,15 +44,11 @@ Features compute_features(const float *x, int N) {
    * Input: x[i] : i=0 .... N-1 
    * Ouput: computed features
    */
-  /* 
-   * DELETE and include a call to your own functions
-   *
-   * For the moment, compute random value between 0 and 1 
-   */
+
   Features feat;
   feat.p = compute_power(x,N);
   //feat.am = compute_am(x, N);
-  //feat.zcr = compute_zcr(x, N, N/(FRAME_TIME * 1e-3)); //?
+  feat.zcr = compute_zcr(x, N, 16000); //?
   return feat;
   
 }
@@ -62,6 +63,8 @@ VAD_DATA * vad_open(float rate) {
   vad_data->sampling_rate = rate;
   vad_data->frame_length = rate * FRAME_TIME * 1e-3;
   vad_data->ko = 0;
+  vad_data->low_zero_crossing = 0;
+  vad_data->high_zero_crossing = 0;
   vad_data->last_change = 0;
   vad_data->frame = 0;
   vad_data->last_state = ST_INIT;
@@ -97,43 +100,51 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
    */
 
   Features f = compute_features(x, vad_data->frame_length);
-  //printf ("%f\n", f.p);
+  printf ("%f\n", f.zcr);
   vad_data->last_feature = f.p; /* save feature, in case you want to show */
 
   switch (vad_data->state) {
-    case ST_INIT:
+   /* case ST_INIT:
     vad_data->state = ST_SILENCE;
-    vad_data->ko = f.p; //Cuantas tramas tomamos para establecer el llindar? 
-    break;
-    /*case ST_INIT:
-    if (vad_data->frame<3){
+    vad_data->zero_crossing = f.zcr;
+    vad_data->ko = f.p + 15; //Cuantas tramas tomamos para establecer el llindar? 
+    break;*/
+    case ST_INIT:
+    if (vad_data->frame<N_INIT){
         vad_data->ko = vad_data->ko + pow(10, f.p/10); //Cuantas tramas tomamos para establecer el llindar? 
+        vad_data->low_zero_crossing = vad_data->low_zero_crossing + f.zcr;
+        vad_data->high_zero_crossing = vad_data->high_zero_crossing + f.zcr;
     }else{
         vad_data->state = ST_SILENCE;
-        vad_data->ko = 10*log10(vad_data->ko/3); //3 tramas para establecer el threshold
+        vad_data->ko = 10*log10(vad_data->ko/N_INIT) + LLINDAR; //3 tramas para establecer el threshold
+        vad_data->low_zero_crossing /= (LOW_ZERO_CROSSING*N_INIT); //dividimos entre 2 para establecer un buen umbral
+        vad_data->high_zero_crossing = HIGH_ZERO_CROSSING*vad_data->high_zero_crossing/N_INIT;
+        printf ("\t%f\n", vad_data->low_zero_crossing);
+        printf ("\t%f\n", vad_data->high_zero_crossing);
+         //printf ("%f\n", vad_data->zero_crossing);
     }
     break;
-    */
+    
 
   case ST_SILENCE:
-    if (f.p > (vad_data->ko))
+    if (f.p > vad_data->ko || (f.zcr < vad_data->low_zero_crossing || f.zcr > vad_data->high_zero_crossing))
       vad_data->state = ST_MAYBE_VOICE;
     vad_data->last_change = vad_data->frame;
     vad_data->last_state = ST_SILENCE; //utilizado para la ultima trama no definida, se quedará el ultimo valor escogido.
     break;
 
   case ST_VOICE:
-    if (f.p < (vad_data->ko))
+    if (f.p < (vad_data->ko) && (f.zcr > vad_data->low_zero_crossing && f.zcr < vad_data->high_zero_crossing))
       vad_data->state = ST_MAYBE_SILENCE;
     vad_data->last_change = vad_data->frame;
     vad_data->last_state = ST_VOICE;
     break;
 
   case ST_MAYBE_SILENCE:
-    if(f.p > vad_data->ko){ //Le restamos 4 porque las fricativas sordas tienen poca potencia
+    if(f.p > vad_data->ko){ 
       vad_data->state = ST_VOICE;
     }
-    else if (f.p < (vad_data->ko) && (vad_data->frame - vad_data->last_change)==UNDECIDED_FRAMES){
+    else if ((f.p < (vad_data->ko) && (vad_data->frame - vad_data->last_change)==UNDECIDED_FRAMES)){
       vad_data->state = ST_SILENCE;
     }
     break;
@@ -142,25 +153,49 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
     if(f.p < vad_data->ko){
       vad_data->state = ST_SILENCE;
     }
-    else if (f.p > (vad_data->ko) && (vad_data->frame - vad_data->last_change)==UNDECIDED_FRAMES){
+    else if ((f.p > (vad_data->ko) || (vad_data->frame - vad_data->last_change)==UNDECIDED_FRAMES))  /*|| (f.zcr < vad_data->low_zero_crossing || f.zcr > vad_data->high_zero_crossing)*/{
       vad_data->state = ST_VOICE;
     }
     break;
 
   case ST_UNDEF:
     break;
+  
   }
   
   
   vad_data->frame++;
 
-  if (vad_data->state == ST_SILENCE ||
-      vad_data->state == ST_VOICE)
+  if (vad_data->state == ST_SILENCE || vad_data->state == ST_VOICE)
     return vad_data->state;
+  else if (vad_data->state == ST_INIT)
+    return ST_SILENCE;
   else
     return ST_UNDEF;
+
 }
 
 void vad_show_state(const VAD_DATA *vad_data, FILE *out) {
   fprintf(out, "%d\t%f\n", vad_data->state, vad_data->last_feature);
 }
+
+
+/*
+Hipotesis sobre fitxer creat de audio mac, a fm=16kHz:
+WE CONSIDER NOISE (silence) IF
+-> zcr > 4000 
+-> power < -50
+-> amplitude < 0.01
+
+WE CONSIDER VOWEL
+-> zcr < 1200
+-> power > -35
+-> amplitude > 0.02
+
+WE CONSIDER CONSONANT Ex: /s/
+-> zcr > 4000
+-> power > -35
+-> amplitude > 0.02
+
+
+*/

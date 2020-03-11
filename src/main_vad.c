@@ -8,17 +8,19 @@
 #include "pav_analysis.h"
 
 
+
 #define DEBUG_VAD 0x1
 
 int main(int argc, char *argv[]) {
-  int verbose = 0; /* To show internal state of vad: verbose = DEBUG_VAD; */
+  int verbose = 1; /* To show internal state of vad: verbose = DEBUG_VAD; Mete un 1 y muestra estados y potencia, mete un 0 y no se ve nada*/ 
 
-  SNDFILE *sndfile_in, *sndfile_out = 0;
-  SF_INFO sf_info;
+  SNDFILE *sndfile_in, *sndfile_out = 0;  //SND FICHERO DE AUDIO
+  SF_INFO sf_info;                        //SF_INFO display information about audio files
   FILE *vadfile;
   int n_read = 0, i;
 
-  VAD_DATA *vad_data;
+
+  VAD_DATA *vad_data;                     //struct
   VAD_STATE state, last_state;
 
   float *buffer, *buffer_zeros;
@@ -41,7 +43,8 @@ int main(int argc, char *argv[]) {
   }
 
   /* Open input sound file */
-  if ((sndfile_in = sf_open(input_wav, SFM_READ, &sf_info)) == 0) {
+  if ((sndfile_in = sf_open(input_wav, SFM_READ, &sf_info)) == 0) { //SNDFILE* sf_open (const char *path, int mode, SF_INFO *sfinfo) ;
+                                                                    //opens the sound file at the specified path
     fprintf(stderr, "Error opening input file %s (%s)\n", input_wav, strerror(errno));
     return -1;
   }
@@ -59,12 +62,12 @@ int main(int argc, char *argv[]) {
 
   /* Open output sound file, with same format, channels, etc. than input */
   if (output_wav) {
-    if ((sndfile_out = sf_open(output_wav, SFM_WRITE, &sf_info)) == 0) {
+    if ((sndfile_out = sf_open(output_wav, SFM_WRITE, &sf_info)) == 0) { //SFM_WRITE := write only mode
       fprintf(stderr, "Error opening output wav file %s (%s)\n", output_wav, strerror(errno));
       return -1;
     }
   }
-
+  
   vad_data = vad_open(sf_info.samplerate);
   /* Allocate memory for buffers */
   frame_size   = vad_frame_size(vad_data);
@@ -84,6 +87,7 @@ int main(int argc, char *argv[]) {
     }
 
     state = vad(vad_data, buffer);
+
     if (verbose & DEBUG_VAD) vad_show_state(vad_data, stdout);
 
     /* TODO: print only SILENCE and VOICE labels */
