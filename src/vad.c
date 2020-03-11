@@ -6,15 +6,11 @@
 
 const float FRAME_TIME = 10.0F; /* in ms. */
 const int UNDECIDED_FRAMES = 5;
-<<<<<<< HEAD
+
 const int N_INIT = 3;
 const float LLINDAR = 10; //llindar del power
 const float LOW_ZERO_CROSSING = 2;
 const float HIGH_ZERO_CROSSING = 1.5;
-
-=======
-//float ko = 0;
->>>>>>> 5411c3cc14c64510bdab79cdf83f60e3b4b97823
 
 
 /* 
