@@ -1,7 +1,6 @@
 #include <math.h>
 #include "pav_analysis.h"
 
-
 float compute_power(const float *x, unsigned int N) {
     float total = 0;
 

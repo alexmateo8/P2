@@ -1,1 +1,6 @@
-bin/
+/*/
+
+!/src
+!/scripts
+!/docopt_c
+!/img
