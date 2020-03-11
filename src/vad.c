@@ -12,7 +12,6 @@ const float LLINDAR = 10; //llindar del power
 const float LOW_ZERO_CROSSING = 2;
 const float HIGH_ZERO_CROSSING = 1.5;
 
-
 /* 
  * As the output state is only ST_VOICE, ST_SILENCE, or ST_UNDEF,
  * only this labels are needed. You need to add all labels, in case
@@ -27,7 +26,7 @@ const char *state2str(VAD_STATE st) {
   return state_str[st];
 }
 
-/* Define a datatype with interesting features */
+
 typedef struct {
   float zcr;
   float p;
@@ -35,9 +34,6 @@ typedef struct {
   float sampling_rate;
 } Features;
 
-/* 
- * TODO: Delete and use your own features!
- */
 
 Features compute_features(const float *x, int N) {
   /*
@@ -48,14 +44,10 @@ Features compute_features(const float *x, int N) {
   Features feat;
   feat.p = compute_power(x,N);
   //feat.am = compute_am(x, N);
-  feat.zcr = compute_zcr(x, N, 16000); //?
+  feat.zcr = compute_zcr(x, N, 16000); 
   return feat;
   
 }
-
-/* 
- * TODO: Init the values of vad_data
- */
 
 VAD_DATA * vad_open(float rate) {
   VAD_DATA *vad_data = malloc(sizeof(VAD_DATA));
@@ -68,6 +60,7 @@ VAD_DATA * vad_open(float rate) {
   vad_data->last_change = 0;
   vad_data->frame = 0;
   vad_data->last_state = ST_INIT;
+  vad_data->zero_crossing = 0;
   return vad_data;
 }
 
@@ -78,7 +71,6 @@ VAD_STATE vad_close(VAD_DATA *vad_data) {
   
   VAD_STATE state = vad_data->last_state; //se queda el ultimo valor (V o S) guardado
 
-
   free(vad_data);
   return state;
 }
@@ -87,21 +79,12 @@ unsigned int vad_frame_size(VAD_DATA *vad_data) {
   return vad_data->frame_length;
 }
 
-/* 
- * TODO: Implement the Voice Activity Detection 
- * using a Finite State Automata
- */
 
 VAD_STATE vad(VAD_DATA *vad_data, float *x) {
 
-  /* 
-   * TODO: You can change this, using your own features,
-   * program finite state automaton, define conditions, etc.
-   */
-
   Features f = compute_features(x, vad_data->frame_length);
-  printf ("%f\n", f.zcr);
   vad_data->last_feature = f.p; /* save feature, in case you want to show */
+
 
   switch (vad_data->state) {
    /* case ST_INIT:
@@ -129,6 +112,7 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
   case ST_SILENCE:
     if (f.p > vad_data->ko || (f.zcr < vad_data->low_zero_crossing || f.zcr > vad_data->high_zero_crossing))
       vad_data->state = ST_MAYBE_VOICE;
+    }
     vad_data->last_change = vad_data->frame;
     vad_data->last_state = ST_SILENCE; //utilizado para la ultima trama no definida, se quedará el ultimo valor escogido.
     break;
@@ -136,6 +120,7 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
   case ST_VOICE:
     if (f.p < (vad_data->ko) && (f.zcr > vad_data->low_zero_crossing && f.zcr < vad_data->high_zero_crossing))
       vad_data->state = ST_MAYBE_SILENCE;
+    }
     vad_data->last_change = vad_data->frame;
     vad_data->last_state = ST_VOICE;
     break;
@@ -162,7 +147,6 @@ VAD_STATE vad(VAD_DATA *vad_data, float *x) {
     break;
   
   }
-  
   
   vad_data->frame++;
 

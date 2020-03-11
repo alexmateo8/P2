@@ -16,12 +16,13 @@ typedef struct {
   VAD_STATE last_state;
   float sampling_rate;
   unsigned int frame_length;
-  float last_feature; /* for debuggin purposes */
-  float ko;
+  float last_feature;      /* for debuggin purposes */
+  float ko;                //Llindar de potencia
+  int last_state;          //Ultima trama modificada
+  int frame;               //Numero de la trama en la que estem
+  int last_change;         //Ultim estat de la FSM
   float low_zero_crossing; //para vocales y consonantes menos fricativas 
   float high_zero_crossing; //para fricativas
-  int frame;
-  int last_change;
 } VAD_DATA;
 
 /* Call this function before using VAD: 
