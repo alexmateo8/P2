@@ -6,11 +6,15 @@
 
 const float FRAME_TIME = 10.0F; /* in ms. */
 const int UNDECIDED_FRAMES = 5;
+<<<<<<< HEAD
 const int N_INIT = 3;
 const float LLINDAR = 10; //llindar del power
 const float LOW_ZERO_CROSSING = 2;
 const float HIGH_ZERO_CROSSING = 1.5;
 
+=======
+//float ko = 0;
+>>>>>>> 5411c3cc14c64510bdab79cdf83f60e3b4b97823
 
 
 /* 
@@ -180,22 +184,3 @@ void vad_show_state(const VAD_DATA *vad_data, FILE *out) {
 }
 
 
-/*
-Hipotesis sobre fitxer creat de audio mac, a fm=16kHz:
-WE CONSIDER NOISE (silence) IF
--> zcr > 4000 
--> power < -50
--> amplitude < 0.01
-
-WE CONSIDER VOWEL
--> zcr < 1200
--> power > -35
--> amplitude > 0.02
-
-WE CONSIDER CONSONANT Ex: /s/
--> zcr > 4000
--> power > -35
--> amplitude > 0.02
-
-
-*/
