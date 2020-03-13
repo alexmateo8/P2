@@ -115,6 +115,7 @@ Ejercicios
 **`La señal de voz consta de 3 silencios de aproximadamente 300ms y 3 series de palabras de aproximadamente 1s.`**
 
 **`En la siguiente imagen se puede observar la representación del etiquetado utilizando el programa cat. Se puede observar la duración de los intervalos de cada segmento.`**
+
 <img src="img/cat_SV.png" width="640" align="center">
 
 	* ¿Es capaz de sacar alguna conclusión a partir de la evolución de la tasa de cruces por cero?
@@ -139,10 +140,24 @@ Ejercicios
 - Complete el código de los ficheros de la práctica para implementar un detector de actividad vocal tan
   exacto como sea posible. Tome como objetivo la maximización de la puntuación-F `TOTAL`.
 
+**`En los siguientes apartados comentaremos el funcionamiento de la máquina de estados. Básicamente, tendremos 5 estados, el inicial, el de voz y el de sonido, y dos estados que serán quizás sonido y quizás voz y iremos a estos solo cuando haya un posible cambio de estado`**
+
 - Inserte una gráfica en la que se vea con claridad la señal temporal, el etiquetado manual y la detección
   automática conseguida para el fichero grabado al efecto. 
 
+<img src="img/Selección_131.png" width="640" align="center">
+<img src="img/Selección_132.png" width="640" align="center">
 
+**`En esta gráfica podemos observar como la señal es reconocida casi perfectamente por el VAD. Lo único que podemos observar, es que hay unos cuantos segmentos de voz a silencio donde la voz tarda un poco en irse. Esto es porqué en el programa, hemos puesto más estados de espera de maybe silence a silence, ya que el silencio, al ser bastante aleatorio dentro de un intervalo, es más complicado de determinar, y consecuentemente necesitamos más muestras para realmente hacer esta decisión. Con la voz no pasa lo mismo, ya que con varias tramas (muchas menos que con el silencio) detectamos una mejora considerable de la amplitud, con lo cual es más fácil determinar los cambios de estado. `**
+**`Comentarios: Observamos un buen recall V, concretamente del 98%. Esto puede ser debido a lo comentado anteriormente, que al tener tan pocos estados de espera, a la que notamos un tramo donde aumenta la potencia, saltamos al estado de voz fácilmente. Por eso, baja bastante la precisión en comparación al silencio: Precisión V -> 91%, precisión S -> 98%. Para el silencio podemos observar que sucede exactamente lo contrario. Globalmente podemos observar que es una buena detección de audio y voz, dándonos una media de un 96.46% en global.`**
+
+
+<img src="img/Selección_134.png" width="640" align="center">
+<img src="img/Selección_133.png" width="640" align="center">
+
+**`Hemos escojido una segunda gráfica, también, para remarcar que hay señales que nos hacen disminuir considerablemente la media. Eso es debido a que nosotros nos hemos definido unos parámetros para otras señales (la mayoria) que en estas no funcionan tan bien. Como se puede observar, es una señal bastante ruidosa y a veces silencio (S) y voz (V) se mezclan o le cuesta bastante hacer la transición entre estas. Aún así, no es tan crítico tener un 81% de media en esta ya que las demás rondamos los 93 aproximadamente. Comentar también, que tal y como podemos ver en las estadísticas, en este caso nos ha fallado bastante la detección de la voz, y la precisión a la vez de detectar el sonido, justo lo contrario a la tónica general, que comentaremos en el apartado siguiente.`**
+
+**`En esta gráfica podemos ver que la máquina ha fallado más en hacer el etiquetado`**
 - Explique, si existen. las discrepancias entre el etiquetado manual y la detección automática.
 
 - Evalúe los resultados sobre la base de datos `db.v4` con el script `vad_evaluation.pl` e inserte a 
