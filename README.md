@@ -188,8 +188,15 @@ Ejercicios
 - Indique a continuación si ha realizado algún tipo de aportación suplementaria (algoritmos de detección o 
   parámetros alternativos, etc.).
 
+**`Se podrá observar en el código, que hemos usado para la máquina de estados los siguientes parámetros:`**
+
+**`Para el nivel de referencia del ruido de fondo hemos usado la potencia media inicial, haciendo un umbral que hemos ido modificando para obtener el máximo de score posible. También para asegurar, hemos obtenido los valores de la amplitud, sobretodo para señales donde no estaba tan claro que era sonido y que era voz. Aparte de esto, hemos usado los cruces por cero, calculado (en las otros dos parámetros también) con el fichero pav_analysis.c, hecho en la práctica 1. Estos, se han usado para determinar los fonemas fricativos, ya que estos tienen unos cruces por cero mayores. También, nos hemos dado cuneta que al decir las vocales o fonemas sonoros, los cruces por cero disminuyen considerablemente (en comparación a los cruces por cero del ruido). Por lo tanto, resumiendo, hemos llegado a la conclusión que tenemos pocos cruces por cero cuando producimos fonemas sonoros, un numero entre medio de cruces por cero cuando hay ruido, y un numero de cruces por cero elevado cuando hay fonemas fricativos, ya sea como la /f/ o la /s/ (de casa, por ejemplo).`**
+
+
 - Si lo desea, puede realizar también algún comentario acerca de la realización de la práctica que considere
   de interés de cara a su evaluación.
+
+**`Comentar también, que hemos introducido variables nuevas, para saber el estado anterior, y para esperar unos cuantos frames para el cambio de estado (comentado anteriormente, que esperabamos más al pasar a silencio que al pasar a voz debido a la aleatoriedad del silencio). Estas variables, se reinician en el cambio de estado. También, usando estas variables hemos decidido que con los últimos frames nos quedamos con el último estado que hayamos tenido.`**
 
 
 ### Antes de entregar la práctica
