@@ -14,7 +14,7 @@
 int main(int argc, char *argv[]) {
   int verbose = 1; /* To show internal state of vad: verbose = DEBUG_VAD; Mete un 1 y muestra estados y potencia, mete un 0 y no se ve nada*/ 
 
-  SNDFILE *sndfile_in, *sndfile_out = 0;  //SND FICHERO DE AUDIO
+  SNDFILE *sndfile_in, *sndfile_out;  //SND FICHERO DE AUDIO
   SF_INFO sf_info;                        //SF_INFO display information about audio files
   FILE *vadfile;
   int n_read = 0, i;
@@ -81,9 +81,10 @@ int main(int argc, char *argv[]) {
   for (t = last_t = 0; ; t++) { /* For each frame ... */
     /* End loop when file has finished (or there is an error) */
     if  ((n_read = sf_read_float(sndfile_in, buffer, frame_size)) != frame_size) break;
-
+    
     if (sndfile_out != 0) {
       /* TODO: copy all the samples into sndfile_out */
+        sf_write_float(sndfile_out, buffer, frame_size);        
     }
 
     state = vad(vad_data, buffer);
@@ -93,15 +94,20 @@ int main(int argc, char *argv[]) {
     /* TODO: print only SILENCE and VOICE labels */
     /* As it is, it prints UNDEF segments but is should be merge to the proper value */
     if (state != last_state && state != ST_UNDEF) {
-      if ((t != last_t)){ //t aumenta mientras last_t no lo hace. Lo utilizamos para saber las tramas anteriores.
+      if ((t != last_t)){                               //t aumenta mientras last_t no lo hace. Lo utilizamos para saber las tramas anteriores.
         fprintf(vadfile, "%.5f\t%.5f\t%s\n", last_t * frame_duration, t * frame_duration, state2str(last_state));
       }
+      
       last_state = state;
       last_t = t;
     }
 
     if (sndfile_out != 0) {
       /* TODO: go back and write zeros in silence segments */
+      if (state == ST_SILENCE || state == ST_UNDEF){
+        sf_seek  (sndfile_out, frame_size*t, SEEK_SET) ;
+        sf_writef_float(sndfile_out, buffer_zeros, frame_size);
+      }
     }
   }
 

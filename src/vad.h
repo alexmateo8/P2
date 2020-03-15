@@ -1,6 +1,7 @@
 #ifndef _VAD_H
 #define _VAD_H
 #include <stdio.h>
+#include <stdbool.h>
 
 /* TODO: add the needed states */
 typedef enum {ST_UNDEF=0, ST_SILENCE, ST_VOICE, ST_INIT, ST_MAYBE_SILENCE, ST_MAYBE_VOICE} VAD_STATE;
@@ -16,13 +17,15 @@ typedef struct {
   VAD_STATE last_state;
   float sampling_rate;
   unsigned int frame_length;
-  float last_feature;      /* for debuggin purposes */
-  float ko;                //Llindar de potencia
-  int last_state;          //Ultima trama modificada
-  int frame;               //Numero de la trama en la que estem
-  int last_change;         //Ultim estat de la FSM
+  float last_feature; /* for debuggin purposes */
+  float ko;
+  float ko_fric;
   float low_zero_crossing; //para vocales y consonantes menos fricativas 
   float high_zero_crossing; //para fricativas
+  int frame;
+  int last_change;
+  float amplitude;
+
 } VAD_DATA;
 
 /* Call this function before using VAD: 
