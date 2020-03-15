@@ -204,6 +204,7 @@ Ejercicios
 
 **`Este es un comentario sobre el código: `**
 <img src="img/Booleans.png" width="640" align="center">
+
 **`Para hacer la comprobacion de la máquina de estados (para las fricativas) hemos usado booleanos (true o false), ya que simplificava bastante la comprensión del código (más legible). Simplemente hemos añadido arriba la libreria <stdbool.h> debajo de <stdio.h>. Los hemos utilizado en el apartado de las condiciones, donde determinamos si hay que cambiar de estado o permanecer en este mismo.`**
 
 
