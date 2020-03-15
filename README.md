@@ -202,6 +202,10 @@ Ejercicios
 
 **`Comentar también, que hemos introducido variables nuevas, para saber el estado anterior, y para esperar unos cuantos frames para el cambio de estado (comentado anteriormente, que esperabamos más al pasar a silencio que al pasar a voz debido a la aleatoriedad del silencio). Estas variables, se reinician en el cambio de estado. También, usando estas variables hemos decidido que con los últimos frames nos quedamos con el último estado que hayamos tenido.`**
 
+**`Este es un comentario sobre el código: `**
+<img src="img/Booleans.png" width="640" align="center">
+**`Para hacer la comprobacion de la máquina de estados (para las fricativas) hemos usado booleanos (true o false), ya que simplificava bastante la comprensión del código (más legible). Simplemente hemos añadido arriba la libreria <stdbool.h> debajo de <stdio.h>. Los hemos utilizado en el apartado de las condiciones, donde determinamos si hay que cambiar de estado o permanecer en este mismo.`**
+
 
 ### Antes de entregar la práctica
 
