@@ -175,6 +175,7 @@ Ejercicios
   mejor opción para esto, ya que no es capaz de visualizar varias señales al mismo tiempo).
 
 <img src="img/ampliacion.png" width="640" align="center">
+
 **`Se puede observar en las imagenes la cancelación de ruido descrita en el enunciado. El hecho de que no sea completamente exacta al transcription que aparece en la imagen es debido a que nuestro detector de voz/silencio es del 93,4% por lo que puede ser que en alguna trama cancelemos voz cuando no lo es. `**
 
 #### Gestión de las opciones del programa usando `docopt_c`
